@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/icon.ico</file>
+        <file>images/executable.png</file>
+        <file>images/folder.png</file>
+        <file>images/volume.png</file>
+    </qresource>
+</RCC>
