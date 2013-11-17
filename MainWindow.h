@@ -22,6 +22,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QDebug>
+#include "QtExtensions.h"
 
 // std
 #include <memory>
@@ -29,10 +30,12 @@
 // xbox
 #include "Xbdm.h"
 
-using namespace XBDM;
+// widgets
+#include "PropertiesDockWidget.h"
+#include "ModulesDockWidget.h"
+#include "FileExplorerDockWidget.h"
 
-#define qs(s) (QString::fromStdString(s))
-#define qhex(n) ("0x" + QString::number(n, 16).toUpper())
+using namespace XBDM;
 
 namespace Ui {
 class MainWindow;
@@ -71,15 +74,15 @@ private:
     // destroyed. When all QObjects are created, I pass in a parent to it
     // so the memory will be taken care of. For non-QObjects it's my job
     // to deal with the memory, that's when I use safe pointers
-    std::unique_ptr<DevConsole> console;
+    std::shared_ptr<DevConsole> console;
 
-    QDockWidget *moduleWindow;
+    ModulesDockWidget *moduleWindow;
     bool moduleWindowIsOpen;
 
-    QDockWidget *propertiesWindow;
+    PropertiesDockWidget *propertiesWindow;
     bool propertiesWindowIsOpen;
 
-    QDockWidget *fileWindow;
+    FileExplorerDockWidget *fileWindow;
     bool fileWindowIsOpen;
 
     // im going to change this around and create a class for each of the windows

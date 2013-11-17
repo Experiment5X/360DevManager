@@ -16,10 +16,17 @@ INCLUDEPATH += $$PWD/../XBDM
 
 
 SOURCES += main.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    PropertiesDockWidget.cpp \
+    ModulesDockWidget.cpp \
+    FileExplorerDockWidget.cpp
 
 HEADERS  += \
-    MainWindow.h
+    MainWindow.h \
+    PropertiesDockWidget.h \
+    QtExtensions.h \
+    ModulesDockWidget.h \
+    FileExplorerDockWidget.h
 
 FORMS    += mainwindow.ui
 
