@@ -19,8 +19,17 @@ public:
 
 signals:
 
-public slots:
+private slots:
+    void on_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
+private:
+
+    // widgets
+    QTreeWidget *lstFiles;
+    QLineEdit *txtPath;
+    QLineEdit *txtSearch;
+
+    std::shared_ptr<XBDM::DevConsole> console;
 };
 
 #endif // FILEEXPLORERDOCKWIDGET_H
