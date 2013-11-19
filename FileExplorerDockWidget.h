@@ -33,6 +33,7 @@ private:
     QPushButton *btnBack;
 
     std::shared_ptr<XBDM::DevConsole> console;
+    QString currentPath;
 
     void loadDirectoryIntoGUI(QString path);
     void loadVolumesIntoGUI();

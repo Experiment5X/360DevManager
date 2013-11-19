@@ -58,27 +58,33 @@ FileExplorerDockWidget::FileExplorerDockWidget(std::shared_ptr<XBDM::DevConsole>
 void FileExplorerDockWidget::on_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     // first we need to make sure that this is a folder
-    if (!item->data(0, Qt::UserRole).toBool())
-        return;
+    if (item->data(0, Qt::UserRole).toBool())
+    {
+        // if the user clicked on a volume, then stuffs a little bit different
+        QString path;
+        if (currentPath.isEmpty())
+            path = item->text(0) + ":\\";
+        else
+            path = currentPath + item->text(0) + "\\";
 
-    // if the user clicked on a volume, then stuffs a little bit different
-    QString path;
-    if (txtPath->text().isEmpty())
-        path = item->text(0) + ":\\";
-    else
-        path = txtPath->text() + item->text(0) + "\\";
-
-    loadDirectoryIntoGUI(path);
+        loadDirectoryIntoGUI(path);
+    }
+    // check if it's an exectuable
+    else if (item->data(1, Qt::UserRole).toBool())
+    {
+        console->LaunchXEX((currentPath + item->text(0)).toStdString());
+    }
 }
 
 void FileExplorerDockWidget::on_btnBackClicked()
 {
-    QString fullPath = txtPath->text();
+    QString fullPath = currentPath;
     QString temp = fullPath.mid(0, fullPath.length() - 2);
 
     if (temp.lastIndexOf('\\') < 0)
     {
         loadVolumesIntoGUI();
+        currentPath = "";
         txtPath->setText("");
     }
     else
@@ -111,11 +117,17 @@ void FileExplorerDockWidget::loadDirectoryIntoGUI(QString path)
         if (f.directory)
             item->setIcon(0, QIcon(":/images/images/folder.png"));
         else if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
+        {
             item->setIcon(0, QIcon(":/images/images/executable.png"));
+
+            // indicates that the file is an executable
+            item->setData(1, Qt::UserRole, true);
+        }
         else
             item->setIcon(0, QIcon(":/images/images/file.png"));
     }
 
+    currentPath = path;
     txtPath->setText(path);
 }
 
