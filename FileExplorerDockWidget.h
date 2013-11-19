@@ -5,6 +5,7 @@
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
 #include <QLineEdit>
+#include <QPushButton>
 #include "QtExtensions.h"
 
 #include "Xbdm.h"
@@ -21,6 +22,7 @@ signals:
 
 private slots:
     void on_itemDoubleClicked(QTreeWidgetItem *item, int column);
+    void on_btnBackClicked();
 
 private:
 
@@ -28,8 +30,12 @@ private:
     QTreeWidget *lstFiles;
     QLineEdit *txtPath;
     QLineEdit *txtSearch;
+    QPushButton *btnBack;
 
     std::shared_ptr<XBDM::DevConsole> console;
+
+    void loadDirectoryIntoGUI(QString path);
+    void loadVolumesIntoGUI();
 };
 
 #endif // FILEEXPLORERDOCKWIDGET_H
