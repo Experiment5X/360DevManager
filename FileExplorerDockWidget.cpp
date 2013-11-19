@@ -107,8 +107,11 @@ void FileExplorerDockWidget::loadDirectoryIntoGUI(QString path)
         // this will indicate whether or not the item is a drive/folder
         item->setData(0, Qt::UserRole, f.directory);
 
+        QString fileName = qs(f.name);
         if (f.directory)
             item->setIcon(0, QIcon(":/images/images/folder.png"));
+        else if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
+            item->setIcon(0, QIcon(":/images/images/executable.png"));
         else
             item->setIcon(0, QIcon(":/images/images/file.png"));
     }
