@@ -97,6 +97,12 @@ void FileExplorerDockWidget::loadDirectoryIntoGUI(QString path)
     bool ok;
     std::vector<FileEntry> contents = console->GetDirectoryContents(path.toStdString(), ok);
 
+    if (!ok)
+    {
+        QMessageBox::warning(this, "Warning", "Couldn't load directory listing.\n");
+        return;
+    }
+
     // clear all of the items that are currently in the list
     while (lstFiles->topLevelItemCount() > 0)
         delete lstFiles->topLevelItem(0);

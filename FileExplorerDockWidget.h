@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QMessageBox>
 #include "QtExtensions.h"
 
 #include "Xbdm.h"
