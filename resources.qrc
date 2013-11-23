@@ -6,5 +6,7 @@
         <file>images/volume.png</file>
         <file>images/file.png</file>
         <file>images/back.png</file>
+        <file>images/download.png</file>
+        <file>images/upload.png</file>
     </qresource>
 </RCC>
