@@ -24,6 +24,7 @@ signals:
 private slots:
     void on_itemDoubleClicked(QTreeWidgetItem *item, int column);
     void on_btnBackClicked();
+    void on_directoryEntered();
 
 private:
 
