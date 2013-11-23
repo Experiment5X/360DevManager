@@ -28,6 +28,7 @@ private slots:
     void on_btnBackClicked();
     void on_directoryEntered();
     void on_contextMenuRequested(QPoint pos);
+    void on_search(QString text);
 
 private:
 

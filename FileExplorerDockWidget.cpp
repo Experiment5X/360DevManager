@@ -33,6 +33,7 @@ FileExplorerDockWidget::FileExplorerDockWidget(std::shared_ptr<XBDM::DevConsole>
     txtSearch = new QLineEdit(dockWidgetContents);
     txtSearch->setPlaceholderText("Search...");
     txtSearch->setMaximumWidth(200);
+    connect(txtSearch, SIGNAL(textChanged(QString)), this, SLOT(on_search(QString)));
     horizontalLayout->addWidget(txtSearch);
 
     verticalLayout->addLayout(horizontalLayout);
@@ -145,6 +146,18 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     else if (selectedItem->text() == "Launch")
     {
         console->LaunchXEX((currentPath + selectedDirent->text(0)).toStdString());
+    }
+}
+
+void FileExplorerDockWidget::on_search(QString text)
+{
+    for (int i = 0; i < lstFiles->topLevelItemCount(); i++)
+    {
+        // if the name contains the text, ignroing case, then display it
+        if (!lstFiles->topLevelItem(i)->text(0).toLower().contains(text.toLower()))
+            lstFiles->topLevelItem(i)->setHidden(true);
+        else
+            lstFiles->topLevelItem(i)->setHidden(false);
     }
 }
 
