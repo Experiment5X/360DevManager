@@ -45,7 +45,7 @@ FileExplorerDockWidget::FileExplorerDockWidget(std::shared_ptr<XBDM::DevConsole>
     connect(lstFiles, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextMenuRequested(QPoint)));
 
     QStringList headerLabels;
-    headerLabels << "Name" << "Size";
+    headerLabels << "Name";
     lstFiles->setHeaderLabels(headerLabels);
 
     verticalLayout->addWidget(lstFiles);
@@ -67,7 +67,7 @@ void FileExplorerDockWidget::on_itemDoubleClicked(QTreeWidgetItem *item, int col
         // if the user clicked on a volume, then stuffs a little bit different
         QString path;
         if (currentPath.isEmpty())
-            path = item->text(0) + ":\\";
+            path = item->data(2, Qt::UserRole).toString() + ":\\";
         else
             path = currentPath + item->text(0) + "\\";
 
@@ -240,8 +240,11 @@ void FileExplorerDockWidget::loadVolumesIntoGUI()
         // this will indicate whether or not the item is a drive/folder
         item->setData(0, Qt::UserRole, true);
 
+        // we need to store the actual name of the drive, since the friendly is displayed
+        item->setData(2, Qt::UserRole, qs(d.name));
+
         item->setIcon(0, QIcon(":/images/images/volume.png"));
-        item->setText(0, qs(d.name));
+        item->setText(0, qs(d.friendlyName));
     }
 
     currentPath = "";
