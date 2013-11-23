@@ -7,6 +7,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QMenu>
+#include <QFileDialog>
 #include "QtExtensions.h"
 
 #include "Xbdm.h"
@@ -25,6 +27,7 @@ private slots:
     void on_itemDoubleClicked(QTreeWidgetItem *item, int column);
     void on_btnBackClicked();
     void on_directoryEntered();
+    void on_contextMenuRequested(QPoint pos);
 
 private:
 

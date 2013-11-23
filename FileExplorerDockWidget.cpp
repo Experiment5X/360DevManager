@@ -40,6 +40,8 @@ FileExplorerDockWidget::FileExplorerDockWidget(std::shared_ptr<XBDM::DevConsole>
     lstFiles = new QTreeWidget(dockWidgetContents);
     lstFiles->setIconSize(QSize(32, 32));
     lstFiles->setColumnWidth(0, 200);
+    lstFiles->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(lstFiles, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextMenuRequested(QPoint)));
 
     QStringList headerLabels;
     headerLabels << "Name" << "Size";
@@ -98,6 +100,44 @@ void FileExplorerDockWidget::on_directoryEntered()
         loadVolumesIntoGUI();
     else
         loadDirectoryIntoGUI(txtPath->text());
+}
+
+void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
+{
+    QMenu contextMenu;
+
+    // get the selected files
+    // the options displayed will differ based on if one is selected or not
+    QTreeWidgetItem *selectedDirent = ((lstFiles->selectedItems().size() == 0) ? nullptr : lstFiles->selectedItems().at(0));
+
+    // make sure an item is selected, and that it's not a folder
+    if (selectedDirent != nullptr && !selectedDirent->data(0, Qt::UserRole).toBool())
+    {
+        contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
+    }
+
+    // if there aren't any items in the menu, then don't show it
+    if (contextMenu.actions().size() == 0)
+        return;
+
+    // show the context menu
+    QAction *selectedItem = contextMenu.exec(lstFiles->mapToGlobal(pos));
+    if (selectedItem == nullptr)
+        return;
+
+    if (selectedItem->text() == "Transfer to PC")
+    {
+        // get a location to save the file to
+        QString savePath = QFileDialog::getSaveFileName(this, "Pick a location to transfer the file to");
+        if (savePath.isEmpty())
+            return;
+
+        bool ok;
+        console->ReceiveFile((currentPath + selectedDirent->text(0)).toStdString(), savePath.toStdString(), ok);
+
+        if (!ok)
+            QMessageBox::warning(this, "Error", "Couldn't transfer file from devkit.");
+    }
 }
 
 void FileExplorerDockWidget::loadDirectoryIntoGUI(QString path)
