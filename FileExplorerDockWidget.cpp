@@ -114,6 +114,10 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     if (selectedDirent != nullptr && !selectedDirent->data(0, Qt::UserRole).toBool())
     {
         contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
+
+        // if it's an executable, then add the option to add
+        if (selectedDirent->data(1, Qt::UserRole).toBool())
+            contextMenu.addAction("Launch");
     }
 
     // if there aren't any items in the menu, then don't show it
@@ -137,6 +141,10 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
 
         if (!ok)
             QMessageBox::warning(this, "Error", "Couldn't transfer file from devkit.");
+    }
+    else if (selectedItem->text() == "Launch")
+    {
+        console->LaunchXEX((currentPath + selectedDirent->text(0)).toStdString());
     }
 }
 
