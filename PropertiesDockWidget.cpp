@@ -61,17 +61,11 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
     QVBoxLayout *verticalLayout_2 = new QVBoxLayout();
     verticalLayout_2->setSpacing(6);
 
-    QLabel *label = new QLabel(dockWidgetContents);
-    verticalLayout_2->addWidget(label);
-
     QLabel *label_2 = new QLabel(dockWidgetContents);
     verticalLayout_2->addWidget(label_2);
 
     QLabel *label_3 = new QLabel(dockWidgetContents);
     verticalLayout_2->addWidget(label_3);
-
-    QLabel *label_4 = new QLabel(dockWidgetContents);
-    verticalLayout_2->addWidget(label_4);
 
     QLabel *label_5 = new QLabel(dockWidgetContents);
     verticalLayout_2->addWidget(label_5);
@@ -111,7 +105,6 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
 
     QLabel *lblFeatures = new QLabel(dockWidgetContents);
     lblFeatures->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
     verticalLayout->addWidget(lblFeatures);
 
     QLabel *lblPlatform = new QLabel(dockWidgetContents);
@@ -151,10 +144,8 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
     verticalLayout_4->setStretch(1, 0);
     verticalLayout_4->setStretch(2, 9);
 
-    label->setText("Debug Name: ");
     label_2->setText("HDD Enabled: ");
     label_3->setText("Debug Memory Size: ");
-    label_4->setText("Type: ");
     label_5->setText("Features: ");
     label_6->setText("Platform: ");
     label_7->setText("Motherboard: ");
