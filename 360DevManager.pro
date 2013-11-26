@@ -19,16 +19,19 @@ SOURCES += main.cpp \
     MainWindow.cpp \
     PropertiesDockWidget.cpp \
     ModulesDockWidget.cpp \
-    FileExplorerDockWidget.cpp
+    FileExplorerDockWidget.cpp \
+    PropertiesDialog.cpp
 
 HEADERS  += \
     MainWindow.h \
     PropertiesDockWidget.h \
     QtExtensions.h \
     ModulesDockWidget.h \
-    FileExplorerDockWidget.h
+    FileExplorerDockWidget.h \
+    PropertiesDialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    PropertiesDialog.ui
 
 RESOURCES += \
     resources.qrc
