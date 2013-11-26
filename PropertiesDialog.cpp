@@ -14,7 +14,7 @@ PropertiesDialog::PropertiesDialog(QString name, QPixmap icon, QList<QPair<QStri
     // load all the properties
     for (auto property : properties)
     {
-        QLabel *lblName = new QLabel(property.first);
+        QLabel *lblName = new QLabel(property.first + ": ");
         QLabel *lblValue = new QLabel(property.second);
 
         ui->nameColumn1Layout->addWidget(lblName);
