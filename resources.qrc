@@ -9,5 +9,8 @@
         <file>images/download.png</file>
         <file>images/upload.png</file>
         <file>images/devkit.png</file>
+        <file>images/retail.png</file>
+        <file>images/testkit.png</file>
+        <file>images/xna.png</file>
     </qresource>
 </RCC>

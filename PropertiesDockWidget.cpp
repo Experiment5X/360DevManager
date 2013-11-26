@@ -174,8 +174,14 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
 
     lblName->setText("<span style=\" font-size:11pt; font-weight:600;\">" + qs(console->GetDebugName(ok)) + "</span>");
 
-    if (consoleType == "Devkit")
+    if (consoleType == "Devkit" && qs(console->GetFeatures(ok)).contains("1GB_RAM"))
+        imgConsole->setPixmap(QPixmap(":/images/images/xna.png"));
+    else if (consoleType == "Devkit")
         imgConsole->setPixmap(QPixmap(":/images/images/devkit.png"));
+    else if (consoleType == "Testkit")
+        imgConsole->setPixmap(QPixmap(":/images/images/testkit.png"));
+    else
+        imgConsole->setPixmap(QPixmap(":/images/images/retail.png"));
 
     setWidget(dockWidgetContents);
 }
