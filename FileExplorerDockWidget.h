@@ -11,9 +11,14 @@
 #include <QFileDialog>
 #include "QtExtensions.h"
 
+#include "PropertiesDialog.h"
+
 #include "Xbdm.h"
 
 #include <memory>
+
+Q_DECLARE_METATYPE(XBDM::FileEntry)
+Q_DECLARE_METATYPE(XBDM::Drive)
 
 class FileExplorerDockWidget : public QDockWidget
 {
@@ -43,6 +48,8 @@ private:
 
     void loadDirectoryIntoGUI(QString path);
     void loadVolumesIntoGUI();
+
+    QString sizeToString(UINT64 size);
 };
 
 #endif // FILEEXPLORERDOCKWIDGET_H

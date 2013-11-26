@@ -62,21 +62,30 @@ FileExplorerDockWidget::FileExplorerDockWidget(std::shared_ptr<XBDM::DevConsole>
 void FileExplorerDockWidget::on_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     // first we need to make sure that this is a folder
-    if (item->data(0, Qt::UserRole).toBool())
+    if (item->data(0, Qt::UserRole).toBool() || item->data(1, Qt::UserRole).value<FileEntry>().directory)
     {
         // if the user clicked on a volume, then stuffs a little bit different
         QString path;
         if (currentPath.isEmpty())
-            path = item->data(2, Qt::UserRole).toString() + ":\\";
+            path = qs(item->data(1, Qt::UserRole).value<Drive>().name) + ":\\";
         else
             path = currentPath + item->text(0) + "\\";
 
         loadDirectoryIntoGUI(path);
     }
-    // check if it's an exectuable
-    else if (item->data(1, Qt::UserRole).toBool())
+    else
     {
-        console->LaunchXEX((currentPath + item->text(0)).toStdString());
+        QString fileName;
+        if (item->data(0, Qt::UserRole).toBool())
+            qs(item->data(1, Qt::UserRole).value<Drive>().name);
+        else
+            fileName = qs(item->data(1, Qt::UserRole).value<FileEntry>().name);
+
+        // check if it's an exectuable
+        if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
+        {
+            console->LaunchXEX((currentPath + item->text(0)).toStdString());
+        }
     }
 }
 
@@ -111,14 +120,21 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     // the options displayed will differ based on if one is selected or not
     QTreeWidgetItem *selectedDirent = ((lstFiles->selectedItems().size() == 0) ? nullptr : lstFiles->selectedItems().at(0));
 
-    // make sure an item is selected, and that it's not a folder
-    if (selectedDirent != nullptr && !selectedDirent->data(0, Qt::UserRole).toBool())
-    {
-        contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
+    // make sure an item is selected
+    if (selectedDirent != nullptr)
+    {    
+        // make sure it's not a folder
+        if (!selectedDirent->data(1, Qt::UserRole).value<FileEntry>().directory)
+        {
+            contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
 
-        // if it's an executable, then add the option to add
-        if (selectedDirent->data(1, Qt::UserRole).toBool())
-            contextMenu.addAction("Launch");
+            // check if it's an exectuable
+            QString fileName = qs(selectedDirent->data(1, Qt::UserRole).value<FileEntry>().name);
+            if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
+                contextMenu.addAction("Launch");
+        }
+
+        contextMenu.addAction("Properties");
     }
 
     // if there aren't any items in the menu, then don't show it
@@ -146,6 +162,34 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     else if (selectedItem->text() == "Launch")
     {
         console->LaunchXEX((currentPath + selectedDirent->text(0)).toStdString());
+    }
+    else if (selectedItem->text() == "Properties")
+    {
+        // get a list of properties to show in the properties window
+        QList<QPair<QString, QString> > properties;
+        QString name;
+        properties.push_back(QPair<QString, QString>("Path", currentPath));
+
+        // we need to load different properties for volumes than folders and files
+        if (!selectedDirent->data(0, Qt::UserRole).toBool())
+        {
+            FileEntry dirent = selectedDirent->data(1, Qt::UserRole).value<FileEntry>();
+
+            name = qs(dirent.name);
+            properties.push_back(QPair<QString, QString>("Size", ((dirent.directory) ? "N/A" : sizeToString(dirent.size))));
+        }
+        else
+        {
+            Drive drive = selectedDirent->data(1, Qt::UserRole).value<Drive>();
+
+            name = qs(drive.name);
+            properties.push_back(QPair<QString, QString>("Free Space", sizeToString(drive.totalFreeBytes)));
+            properties.push_back(QPair<QString, QString>("Total Space", sizeToString(drive.totalBytes)));
+            properties.push_back(QPair<QString, QString>("Percentage Free", QString::number(drive.totalFreeBytes / (double)drive.totalBytes * 100) + "%"));
+        }
+
+        PropertiesDialog *dialog = new PropertiesDialog(name, selectedDirent->icon(0).pixmap(32, 32), properties, this);
+        dialog->exec();
     }
 }
 
@@ -205,19 +249,15 @@ void FileExplorerDockWidget::loadDirectoryIntoGUI(QString path)
         QTreeWidgetItem *item = new QTreeWidgetItem(lstFiles);
         item->setText(0, qs(f.name));
 
-        // this will indicate whether or not the item is a drive/folder
-        item->setData(0, Qt::UserRole, f.directory);
+        // this will indicate whether the item is a volume or not
+        item->setData(0, Qt::UserRole, false);
+        item->setData(1, Qt::UserRole, QVariant::fromValue(f));
 
         QString fileName = qs(f.name);
         if (f.directory)
             item->setIcon(0, QIcon(":/images/images/folder.png"));
         else if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
-        {
             item->setIcon(0, QIcon(":/images/images/executable.png"));
-
-            // indicates that the file is an executable
-            item->setData(1, Qt::UserRole, true);
-        }
         else
             item->setIcon(0, QIcon(":/images/images/file.png"));
     }
@@ -237,15 +277,26 @@ void FileExplorerDockWidget::loadVolumesIntoGUI()
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(lstFiles);
 
-        // this will indicate whether or not the item is a drive/folder
+        // this will indicate whether the item is a volume or not
         item->setData(0, Qt::UserRole, true);
+        item->setData(1, Qt::UserRole, QVariant::fromValue(d));
 
-        // we need to store the actual name of the drive, since the friendly is displayed
-        item->setData(2, Qt::UserRole, qs(d.name));
 
         item->setIcon(0, QIcon(":/images/images/volume.png"));
         item->setText(0, qs(d.friendlyName));
     }
 
     currentPath = "";
+}
+
+QString FileExplorerDockWidget::sizeToString(UINT64 size)
+{
+    if (size < 0x1000)
+        return QString::number(size) + " bytes";
+    else if (size < 1048576)
+        return QString::number(size / 1024.0) + " KB";
+    else if (size < 1073741824)
+        return QString::number(size / 1048576.0) + " MB";
+    else
+        return QString::number(size / 1073741824.0) + " GB";
 }
