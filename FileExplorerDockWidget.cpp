@@ -177,6 +177,8 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
 
             name = qs(dirent.name);
             properties.push_back(QPair<QString, QString>("Size", ((dirent.directory) ? "N/A" : sizeToString(dirent.size))));
+            properties.push_back(QPair<QString, QString>("Created", QDateTime::fromTime_t(dirent.creationTime).toString()));
+            properties.push_back(QPair<QString, QString>("Modified", QDateTime::fromTime_t(dirent.modifiedTime).toString()));
         }
         else
         {
@@ -185,7 +187,7 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
             name = qs(drive.name);
             properties.push_back(QPair<QString, QString>("Free Space", sizeToString(drive.totalFreeBytes)));
             properties.push_back(QPair<QString, QString>("Total Space", sizeToString(drive.totalBytes)));
-            properties.push_back(QPair<QString, QString>("Percentage Free", QString::number(drive.totalFreeBytes / (double)drive.totalBytes * 100) + "%"));
+            properties.push_back(QPair<QString, QString>("Percentage Free", QString::number(drive.totalFreeBytes / (double)drive.totalBytes * 100, 'g', 2) + "%"));
         }
 
         PropertiesDialog *dialog = new PropertiesDialog(name, selectedDirent->icon(0).pixmap(32, 32), properties, this);
@@ -294,9 +296,9 @@ QString FileExplorerDockWidget::sizeToString(UINT64 size)
     if (size < 0x1000)
         return QString::number(size) + " bytes";
     else if (size < 1048576)
-        return QString::number(size / 1024.0) + " KB";
+        return QString::number(size / 1024.0, 'g', 3) + " KB";
     else if (size < 1073741824)
-        return QString::number(size / 1048576.0) + " MB";
+        return QString::number(size / 1048576.0, 'g', 3) + " MB";
     else
-        return QString::number(size / 1073741824.0) + " GB";
+        return QString::number(size / 1073741824.0, 'g', 3) + " GB";
 }

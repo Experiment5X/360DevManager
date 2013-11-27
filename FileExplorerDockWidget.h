@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QFileDialog>
+#include <QDateTime>
 #include "QtExtensions.h"
 
 #include "PropertiesDialog.h"
