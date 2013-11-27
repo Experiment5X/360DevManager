@@ -168,7 +168,6 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
         // get a list of properties to show in the properties window
         QList<QPair<QString, QString> > properties;
         QString name;
-        properties.push_back(QPair<QString, QString>("Path", currentPath));
 
         // we need to load different properties for volumes than folders and files
         if (!selectedDirent->data(0, Qt::UserRole).toBool())
@@ -176,6 +175,7 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
             FileEntry dirent = selectedDirent->data(1, Qt::UserRole).value<FileEntry>();
 
             name = qs(dirent.name);
+            properties.push_back(QPair<QString, QString>("Path", currentPath));
             properties.push_back(QPair<QString, QString>("Size", ((dirent.directory) ? "N/A" : sizeToString(dirent.size))));
             properties.push_back(QPair<QString, QString>("Created", QDateTime::fromTime_t(dirent.creationTime).toString()));
             properties.push_back(QPair<QString, QString>("Modified", QDateTime::fromTime_t(dirent.modifiedTime).toString()));
