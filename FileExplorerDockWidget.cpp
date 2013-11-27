@@ -149,7 +149,7 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     if (selectedItem->text() == "Transfer to PC")
     {
         // get a location to save the file to
-        QString savePath = QFileDialog::getSaveFileName(this, "Pick a location to transfer the file to");
+        QString savePath = QFileDialog::getSaveFileName(this, "Pick a location to transfer the file to", DESKTOP_LOCATION + selectedDirent->text(0));
         if (savePath.isEmpty())
             return;
 
