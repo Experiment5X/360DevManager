@@ -126,14 +126,13 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
         // make sure it's not a folder
         if (!selectedDirent->data(1, Qt::UserRole).value<FileEntry>().directory)
         {
-            contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
-
             // check if it's an exectuable
             QString fileName = qs(selectedDirent->data(1, Qt::UserRole).value<FileEntry>().name);
             if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
                 contextMenu.addAction("Launch");
         }
 
+        contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
         contextMenu.addAction("Properties");
     }
 
@@ -148,16 +147,33 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
 
     if (selectedItem->text() == "Transfer to PC")
     {
-        // get a location to save the file to
-        QString savePath = QFileDialog::getSaveFileName(this, "Pick a location to transfer the file to", DESKTOP_LOCATION + selectedDirent->text(0));
-        if (savePath.isEmpty())
-            return;
+        // we need to display a different dialog and call different functions for folders and files
+        if (selectedDirent->data(1, Qt::UserRole).value<FileEntry>().directory)
+        {
+            // get a location to save the folder to
+            QString saveLocation = QFileDialog::getExistingDirectory(this, "Pick a location to transfer the folder", DESKTOP_LOCATION);
+            if (saveLocation.isEmpty())
+                return;
 
-        bool ok;
-        console->ReceiveFile((currentPath + selectedDirent->text(0)).toStdString(), savePath.toStdString(), ok);
+            bool ok;
+            console->ReceiveDirectory(currentPath.toStdString() + selectedDirent->data(1, Qt::UserRole).value<FileEntry>().name + "\\", saveLocation.toStdString() + "/", ok);
 
-        if (!ok)
-            QMessageBox::warning(this, "Error", "Couldn't transfer file from devkit.");
+            if (!ok)
+                QMessageBox::warning(this, "Error", "Couldn't transfer directory from devkit.");
+        }
+        else
+        {
+            // get a location to save the file to
+            QString savePath = QFileDialog::getSaveFileName(this, "Pick a location to transfer the file to", DESKTOP_LOCATION + selectedDirent->text(0));
+            if (savePath.isEmpty())
+                return;
+
+            bool ok;
+            console->ReceiveFile((currentPath + selectedDirent->text(0)).toStdString(), savePath.toStdString(), ok);
+
+            if (!ok)
+                QMessageBox::warning(this, "Error", "Couldn't transfer file from devkit.");
+        }
     }
     else if (selectedItem->text() == "Launch")
     {
