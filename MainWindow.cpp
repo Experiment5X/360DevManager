@@ -17,7 +17,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionConnect_triggered()
 {
     // get the console's ip address from the user
-    QString ip = QInputDialog::getText(this, "Console IP Address", "IP Address:", QLineEdit::Normal, "169.254.66.42");
+    QString ip = QInputDialog::getText(this, "Console IP Address", "IP Address:", QLineEdit::Normal, "169.254.66.42", NULL, Qt::WindowCloseButtonHint);
 
     // make sure it's a valid ip address
     QRegExp exp("\\d+\\.\\d+\\.\\d+\\.\\d+");
