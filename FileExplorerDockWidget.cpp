@@ -120,6 +120,12 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     // the options displayed will differ based on if one is selected or not
     QTreeWidgetItem *selectedDirent = ((lstFiles->selectedItems().size() == 0) ? nullptr : lstFiles->selectedItems().at(0));
 
+    // if we're in the root, then we can't create a folder
+    if (currentPath != "")
+    {
+        contextMenu.addAction(QPixmap(":/images/images/folder.png"), "New Folder");
+    }
+
     // make sure an item is selected
     if (selectedDirent != nullptr)
     {    
@@ -133,17 +139,15 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
                 contextMenu.addAction("Launch");
         }
 
+        // we can't modify volumes
         if (currentPath != "")
+        {
             contextMenu.addAction("Delete");
+            contextMenu.addAction("Rename");
+        }
 
         contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
         contextMenu.addAction("Properties");
-    }
-
-    // if we're in the root, then we can't create a folder
-    if (currentPath != "")
-    {
-        contextMenu.addAction(QPixmap(":/images/images/folder.png"), "New Folder");
     }
 
     // if there aren't any items in the menu, then don't show it
@@ -266,6 +270,39 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
         console->DeleteDirent(currentPath.toStdString() + dirent.name, dirent.directory, ok);
 
         // reload the current directory so the deleted dirent isn't there anymore
+        loadDirectoryIntoGUI(currentPath);
+    }
+    else if (selectedItem->text() == "Rename")
+    {
+        QString newName = QInputDialog::getText(this, "Rename", "New Name", QLineEdit::Normal, selectedDirent->text(0), NULL, Qt::WindowCloseButtonHint);
+        if (newName.isEmpty())
+            return;
+
+        // make sure that the name hasn't already been used
+        for (int i = 0; i < lstFiles->topLevelItemCount(); i++)
+        {
+            QTreeWidgetItem *item = lstFiles->topLevelItem(i);
+            if (item->text(0).toLower() == newName.toLower())
+            {
+                QMessageBox::warning(this, "Rename Error", "The name " + newName + " is already in use.");
+                return;
+            }
+        }
+
+        // tell the console to rename the file
+        bool ok;
+        console->RenameFile((currentPath + selectedDirent->text(0)).toStdString(), (currentPath + newName).toStdString(), ok);
+
+        // report any errors
+        if (!ok)
+        {
+            FileEntry dirent = selectedDirent->data(1, Qt::UserRole).value<FileEntry>();
+
+            QMessageBox::warning(this, "Rename Error", QString("The console could not rename the ") + ((dirent.directory) ? "folder" : "file") + ".");
+            return;
+        }
+
+        // update the GUI
         loadDirectoryIntoGUI(currentPath);
     }
 }
