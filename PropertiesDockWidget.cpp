@@ -158,7 +158,6 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
 
     // load all of the settings into the GUI
     bool ok;
-    lblActiveTitle->setText(qs(console->GetActiveTitle(ok)));
     lblHddEnabled->setText(console->IsHddEnabled(ok) ? "Yes" : "No");
     lblFeatures->setText(qs(console->GetFeatures(ok)));
     lblPlatform->setText(qs(console->GetPlatform(ok)));
@@ -167,6 +166,12 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
     lblKrnlVersion->setText(qs(console->GetKernelVersion(ok)));
     lblRecoveryVersion->setText(qs(console->GetRecoveryVersion(ok)));
     lblDebugMemorySize->setText(qhex(console->GetDebugMemorySize(ok)));
+
+    // i only want the active title label to show the name of the executable
+    // a tooltip can show the full path
+    QString activeTitlePath = qs(console->GetActiveTitle(ok));
+    lblActiveTitle->setText(activeTitlePath.mid(activeTitlePath.lastIndexOf("\\") + 1));
+    lblActiveTitle->setToolTip(activeTitlePath);
 
     QString consoleType = qs(console->GetType(ok));
     consoleType = consoleType.mid(0, 1).toUpper() + consoleType.mid(1).toLower();
