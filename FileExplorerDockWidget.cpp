@@ -126,6 +126,8 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
         // make sure it's not a folder
         if (!selectedDirent->data(1, Qt::UserRole).value<FileEntry>().directory)
         {
+            contextMenu.addAction(QPixmap(":/images/images/folder.png"), "New Folder");
+
             // check if it's an exectuable
             QString fileName = qs(selectedDirent->data(1, Qt::UserRole).value<FileEntry>().name);
             if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
@@ -134,6 +136,11 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
 
         contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
         contextMenu.addAction("Properties");
+    }
+    // if we're in the root, then we can't create a folder
+    else if (currentPath != "")
+    {
+        contextMenu.addAction(QPixmap(":/images/images/folder.png"), "New Folder");
     }
 
     // if there aren't any items in the menu, then don't show it
@@ -208,6 +215,44 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
 
         PropertiesDialog *dialog = new PropertiesDialog(name, selectedDirent->icon(0).pixmap(32, 32), properties, this);
         dialog->exec();
+    }
+    else if (selectedItem->text() == "New Folder")
+    {
+        // get a valid name for a folder
+        int maxFolder = 1;
+        for (int i = 0; i < lstFiles->topLevelItemCount(); i++)
+        {
+            FileEntry dirent = lstFiles->topLevelItem(i)->data(1, Qt::UserRole).value<FileEntry>();
+            if (!dirent.directory)
+                continue;
+
+            QRegExp folderRegex("new folder (\\d+)", Qt::CaseInsensitive);
+            if (folderRegex.indexIn(qs(dirent.name)) > 1)
+            {
+                // get the folder number, so if the text was New Folder 5
+                // it would get the 5
+                int currentFolderNum = folderRegex.cap(1).toInt();
+
+                // this looks like it shouldn't work, but...
+                // the folders are going to be in sorted order, so it's all good
+                if (currentFolderNum == maxFolder)
+                    maxFolder++;
+            }
+
+        }
+
+        QString folderName = QInputDialog::getText(this, "New Folder", "Folder Name", QLineEdit::Normal,
+                                                   "New Folder " + QString::number(maxFolder), NULL, Qt::WindowCloseButtonHint);
+
+        if (folderName.isEmpty())
+            return;
+
+        // tell the console to create a directory
+        bool ok;
+        console->MakeDirectory((currentPath + folderName).toStdString(), ok);
+
+        // reload the current directory, so the new one is put in there
+        loadDirectoryIntoGUI(currentPath);
     }
 }
 

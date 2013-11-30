@@ -10,10 +10,10 @@
 #include <QMenu>
 #include <QFileDialog>
 #include <QDateTime>
+#include<QInputDialog>
 #include "QtExtensions.h"
 
 #include "PropertiesDialog.h"
-
 #include "Xbdm.h"
 
 #include <memory>
