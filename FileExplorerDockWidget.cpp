@@ -226,8 +226,8 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
             if (!dirent.directory)
                 continue;
 
-            QRegExp folderRegex("new folder (\\d+)", Qt::CaseInsensitive);
-            if (folderRegex.indexIn(qs(dirent.name)) > 1)
+            QRegExp folderRegex("New Folder (\\d+)", Qt::CaseInsensitive);
+            if (folderRegex.indexIn(qs(dirent.name)) >= 0)
             {
                 // get the folder number, so if the text was New Folder 5
                 // it would get the 5
