@@ -120,6 +120,12 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     // the options displayed will differ based on if one is selected or not
     QTreeWidgetItem *selectedDirent = ((lstFiles->selectedItems().size() == 0) ? nullptr : lstFiles->selectedItems().at(0));
 
+    // if we're in the root, then we can't create a folder
+    if (currentPath != "")
+    {
+        contextMenu.addAction(QPixmap(":/images/images/folder.png"), "New Folder");
+    }
+    
     // make sure an item is selected
     if (selectedDirent != nullptr)
     {    
@@ -138,12 +144,6 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
 
         contextMenu.addAction(QPixmap(":/images/images/download.png"), "Transfer to PC");
         contextMenu.addAction("Properties");
-    }
-
-    // if we're in the root, then we can't create a folder
-    if (currentPath != "")
-    {
-        contextMenu.addAction(QPixmap(":/images/images/folder.png"), "New Folder");
     }
 
     // if there aren't any items in the menu, then don't show it
