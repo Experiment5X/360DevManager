@@ -124,6 +124,7 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
     if (currentPath != "")
     {
         contextMenu.addAction(QPixmap(":/images/images/folder.png"), "New Folder");
+        contextMenu.addAction(QPixmap(":/images/images/upload.png"), "Send File Here");
     }
 
     // make sure an item is selected
@@ -132,7 +133,6 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
         // make sure it's not a folder
         if (!selectedDirent->data(1, Qt::UserRole).value<FileEntry>().directory)
         {
-
             // check if it's an exectuable
             QString fileName = qs(selectedDirent->data(1, Qt::UserRole).value<FileEntry>().name);
             if (fileName.mid(fileName.lastIndexOf(".") + 1).toLower() == "xex")
@@ -303,6 +303,20 @@ void FileExplorerDockWidget::on_contextMenuRequested(QPoint pos)
         }
 
         // update the GUI
+        loadDirectoryIntoGUI(currentPath);
+    }
+    else if (selectedItem->text() == "Send File Here")
+    {
+        QString fileToSend = QFileDialog::getOpenFileName(this, "Choose a file to send...", DESKTOP_LOCATION);
+        if (fileToSend.isEmpty())
+            return;
+
+        // send the file to the console
+        bool ok;
+        QFileInfo fileInfo(fileToSend);
+        console->SendFile(fileToSend.toStdString(), (currentPath + fileInfo.fileName()).toStdString(), ok);
+
+        // reload the GUI
         loadDirectoryIntoGUI(currentPath);
     }
 }
