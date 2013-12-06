@@ -4,7 +4,7 @@
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow), moduleWindowIsOpen(false), propertiesWindowIsOpen(false), fileWindowIsOpen(false)
+    QMainWindow(parent), ui(new Ui::MainWindow), moduleWindowIsOpen(false), propertiesWindowIsOpen(false), fileWindowIsOpen(false), memoryRegionsWindowIsOpen(false)
 {
     ui->setupUi(this);
 }
@@ -46,6 +46,7 @@ void MainWindow::on_actionConnect_triggered()
     ui->actionShow_Modules->setEnabled(true);
     ui->actionShow_Properties->setEnabled(true);
     ui->actionShow_File_Explorer->setEnabled(true);
+    ui->actionShow_Memory_Regions->setEnabled(true);
     ui->menuReboot->setEnabled(true);
 
     createPropertiesWindow();
@@ -114,6 +115,16 @@ void MainWindow::createFileWindow()
     connect(fileWindow, SIGNAL(visibilityChanged(bool)), this, SLOT(on_actionShow_File_Explorer_close(bool)));
 }
 
+void MainWindow::createMemoryRegionsWindow()
+{
+    memoryRegionsWindow = new MemoryRegionsDockWidget(console, this);
+
+    addDockWidget(Qt::BottomDockWidgetArea, memoryRegionsWindow);
+    memoryRegionsWindowIsOpen = true;
+
+    connect(memoryRegionsWindow, SIGNAL(visibilityChanged(bool)), this, SLOT(on_actionShow_Memory_Regions_close(bool)));
+}
+
 void MainWindow::on_actionShow_Properties_triggered()
 {
     if (propertiesWindowIsOpen)
@@ -177,5 +188,33 @@ void MainWindow::on_actionShow_File_Explorer_close(bool visible)
     {
         ui->actionShow_File_Explorer->setChecked(false);
         fileWindowIsOpen = false;
+    }
+}
+
+void MainWindow::on_actionShow_Memory_Regions_triggered()
+{
+    if (memoryRegionsWindowIsOpen)
+    {
+        // this will "close" it
+        if (memoryRegionsWindow != nullptr)
+        {
+            delete memoryRegionsWindow;
+            memoryRegionsWindow = nullptr;
+        }
+
+        memoryRegionsWindow = nullptr;
+        memoryRegionsWindowIsOpen = false;
+        return;
+    }
+
+    createMemoryRegionsWindow();
+}
+
+void MainWindow::on_actionShow_Memory_Regions_close(bool visible)
+{
+    if (!visible)
+    {
+        ui->actionShow_Memory_Regions->setChecked(false);
+        memoryRegionsWindowIsOpen = false;
     }
 }

@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     PropertiesDockWidget.cpp \
     ModulesDockWidget.cpp \
     FileExplorerDockWidget.cpp \
-    PropertiesDialog.cpp
+    PropertiesDialog.cpp \
+    MemoryRegionsDockWidget.cpp
 
 HEADERS  += \
     MainWindow.h \
@@ -28,7 +29,8 @@ HEADERS  += \
     QtExtensions.h \
     ModulesDockWidget.h \
     FileExplorerDockWidget.h \
-    PropertiesDialog.h
+    PropertiesDialog.h \
+    MemoryRegionsDockWidget.h
 
 FORMS    += mainwindow.ui \
     PropertiesDialog.ui

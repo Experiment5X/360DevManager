@@ -34,6 +34,7 @@
 #include "PropertiesDockWidget.h"
 #include "ModulesDockWidget.h"
 #include "FileExplorerDockWidget.h"
+#include "MemoryRegionsDockWidget.h"
 
 using namespace XBDM;
 
@@ -66,6 +67,9 @@ private slots:
     void on_actionShow_File_Explorer_triggered();
     void on_actionShow_File_Explorer_close(bool visible);
 
+    void on_actionShow_Memory_Regions_triggered();
+    void on_actionShow_Memory_Regions_close(bool visible);
+
 private:
     Ui::MainWindow *ui;
 
@@ -85,10 +89,14 @@ private:
     FileExplorerDockWidget *fileWindow;
     bool fileWindowIsOpen;
 
+    MemoryRegionsDockWidget *memoryRegionsWindow;
+    bool memoryRegionsWindowIsOpen;
+
     // im going to change this around and create a class for each of the windows
     void createModulesWindow();
     void createPropertiesWindow();
     void createFileWindow();
+    void createMemoryRegionsWindow();
 };
 
 #endif // MAINWINDOW_H

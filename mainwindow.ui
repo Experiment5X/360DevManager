@@ -53,6 +53,7 @@
     <addaction name="actionShow_Modules"/>
     <addaction name="actionShow_Properties"/>
     <addaction name="actionShow_File_Explorer"/>
+    <addaction name="actionShow_Memory_Regions"/>
    </widget>
    <addaction name="menuConsole"/>
    <addaction name="menuView"/>
@@ -131,6 +132,17 @@
    </property>
    <property name="text">
     <string>Show File Explorer</string>
+   </property>
+  </action>
+  <action name="actionShow_Memory_Regions">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Show Memory Regions</string>
    </property>
   </action>
  </widget>
