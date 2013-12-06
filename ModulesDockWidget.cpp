@@ -3,6 +3,8 @@
 ModulesDockWidget::ModulesDockWidget(std::shared_ptr<XBDM::DevConsole> console, QWidget *parent) :
     QDockWidget(parent)
 {
+    setWindowTitle("Modules");
+
     QTreeWidget *moduleTree = new QTreeWidget(this);
 
     QStringList headerLabels;
