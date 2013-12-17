@@ -358,7 +358,7 @@ void FileExplorerDockWidget::loadDirectoryIntoGUI(QString path)
                     {
                         // snagged this from stack overflow, written by LB--
                         return lexicographical_compare(f1.name.begin(), f1.name.end(), f2.name.begin(), f2.name.end(),
-                            [](string::value_type a, string::value_type b)
+                            [](std::string::value_type a, std::string::value_type b)
                             {
                                 return std::tolower(a) < std::tolower(b);
                             });

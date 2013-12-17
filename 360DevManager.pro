@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-CONFIG   += C++11
+CONFIG   += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -39,3 +39,4 @@ RESOURCES += \
     resources.qrc
 
 win32:LIBS += -L$$PWD/../XBDM-Win/debug/ -lXBDM
+macx:LIBS += -L$$PWD/../XBDM-OSX/debug/ -lXBDM
