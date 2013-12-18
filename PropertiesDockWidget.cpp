@@ -26,7 +26,6 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
 
     QLabel *lblName = new QLabel(fancyDataWidget);
     QFont font;
-    font.setPointSize(11);
     font.setBold(true);
     font.setWeight(75);
     lblName->setFont(font);
@@ -34,7 +33,11 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
 
     QLabel *lblConsoleType = new QLabel(fancyDataWidget);
     QFont font1;
+#ifdef __APPLE__
+    font1.setPointSize(11);
+#else
     font1.setPointSize(8);
+#endif
     font1.setBold(false);
     font1.setWeight(50);
     font1.setKerning(true);
@@ -177,7 +180,11 @@ PropertiesDockWidget::PropertiesDockWidget(std::shared_ptr<XBDM::DevConsole> con
     consoleType = consoleType.mid(0, 1).toUpper() + consoleType.mid(1).toLower();
     lblConsoleType->setText("<span style=\" color:#737373;\">" + consoleType + "</span>");
 
+#ifdef __APPLE__
+    lblName->setText("<span style=\" font-size:15pt; font-weight:600;\">" + qs(console->GetDebugName(ok)) + "</span>");
+#else
     lblName->setText("<span style=\" font-size:11pt; font-weight:600;\">" + qs(console->GetDebugName(ok)) + "</span>");
+#endif
 
     if (consoleType == "Devkit" && qs(console->GetFeatures(ok)).contains("1GB_RAM"))
         imgConsole->setPixmap(QPixmap(":/images/images/xna.png"));

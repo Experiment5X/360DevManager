@@ -21,12 +21,19 @@ FileExplorerDockWidget::FileExplorerDockWidget(std::shared_ptr<XBDM::DevConsole>
     horizontalLayout->setSpacing(6);
 
     btnBack = new QPushButton(dockWidgetContents);
-    btnBack->setIconSize(QSize(24, 24));
-    btnBack->setIcon(QIcon(":/images/images/back.png"));
     connect(btnBack, SIGNAL(clicked()), this, SLOT(on_btnBackClicked()));
     horizontalLayout->addWidget(btnBack);
 
     txtPath = new QLineEdit(dockWidgetContents);
+
+    btnBack->setMaximumHeight(txtPath->height());
+#ifdef __WIN32
+    btnBack->setIconSize(btnBack->height());
+#else
+    btnBack->setIconSize(QSize(16, 16));
+#endif
+    btnBack->setIcon(QIcon(":/images/images/back.png"));
+
     connect(txtPath, SIGNAL(returnPressed()), this, SLOT(on_directoryEntered()));
     horizontalLayout->addWidget(txtPath);
 
