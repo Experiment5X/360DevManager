@@ -16,6 +16,9 @@ public:
     explicit PropertiesDialog(QString name, QPixmap icon, QList<QPair<QString, QString> > properties, QWidget *parent = 0);
     ~PropertiesDialog();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::PropertiesDialog *ui;
 };

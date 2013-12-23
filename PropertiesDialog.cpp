@@ -28,3 +28,8 @@ PropertiesDialog::~PropertiesDialog()
 {
     delete ui;
 }
+
+void PropertiesDialog::on_pushButton_clicked()
+{
+    close();
+}
