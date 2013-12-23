@@ -30,7 +30,7 @@ FileExplorerDockWidget::FileExplorerDockWidget(std::shared_ptr<XBDM::DevConsole>
 #ifdef __WIN32
     btnBack->setIconSize(btnBack->height());
 #else
-    btnBack->setIconSize(QSize(16, 16));
+    btnBack->setIconSize(QSize(14, 14));
 #endif
     btnBack->setIcon(QIcon(":/images/images/back.png"));
 
