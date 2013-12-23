@@ -22,6 +22,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QDebug>
+#include <QKeySequence>
 #include "QtExtensions.h"
 
 // std

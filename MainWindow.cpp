@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow), moduleWindowIsOpen(false), propertiesWindowIsOpen(false), fileWindowIsOpen(false), memoryRegionsWindowIsOpen(false)
 {
     ui->setupUi(this);
+
+    ui->actionConnect->setShortcut(Qt::CTRL | Qt::Key_O);
 }
 
 MainWindow::~MainWindow()
